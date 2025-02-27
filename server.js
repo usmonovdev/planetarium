@@ -20,6 +20,9 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"))
 }
 
+// Auth routes
+app.use("/api/v1/auth", require("./routes/auth.route"))
+
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
