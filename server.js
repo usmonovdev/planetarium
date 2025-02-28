@@ -25,6 +25,9 @@ if (process.env.NODE_ENV === "development") {
 // Auth routes
 app.use("/api/v1/auth", require("./routes/auth.route"));
 
+// Start routes
+app.use("/api/v1/stars", require("./routes/star.route"))
+
 // Error handler
 app.use(errorHandler);
 
