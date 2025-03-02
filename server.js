@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const morgan = require("morgan");
 const colors = require("colors");
+const path = require("path")
 const errorHandler = require("./middleware/error");
 
 // Initialize dotenv
@@ -21,6 +22,8 @@ app.use(express.urlencoded({ extended: false }));
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
+
+app.use(express.static(path.join(__dirname, "public")))
 
 // Auth routes
 app.use("/api/v1/auth", require("./routes/auth.route"));
