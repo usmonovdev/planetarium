@@ -28,8 +28,11 @@ app.use(express.static(path.join(__dirname, "public")))
 // Auth routes
 app.use("/api/v1/auth", require("./routes/auth.route"));
 
-// Start routes
+// Star routes
 app.use("/api/v1/stars", require("./routes/star.route"))
+
+// Planet routes
+app.use("/api/v1/planets", require("./routes/planet.route"))
 
 // Error handler
 app.use(errorHandler);
