@@ -70,6 +70,82 @@ exports.createPlanet = AsyncHandler(async (req, res, next) => {
 
   res.status(201).json({
     success: true,
-    data: newPlanet
-  })
+    data: newPlanet,
+  });
+});
+
+// @desc        Update planet
+// @route       POST /api/v1/auth/planets/:id
+// @access      Private/Admin
+exports.updatePlanet = AsyncHandler(async (req, res, next) => {
+  // Get request data
+  const {
+    name,
+    distanceToStar,
+    diametr,
+    yearDuration,
+    dayDurtion,
+    tempreature,
+    sequenceNumber,
+    satelittes,
+    star,
+  } = req.body;
+
+  // Find updating planet
+  const findPlanet = await Planet.findById(req.params.id);
+
+  // If planet not found
+  if (!findPlanet) {
+    return next(new ErrorResponse("Planet not found", 400));
+  }
+
+  const updatePlanet = {
+    name: name || findPlanet.name,
+    distanceToStar: distanceToStar || findPlanet.distanceToStar,
+    diametr: diametr || findPlanet.diametr,
+    yearDuration: yearDuration || findPlanet.yearDuration,
+    dayDurtion: dayDurtion || findPlanet.dayDurtion,
+    tempreature: tempreature || findPlanet.tempreature,
+    sequenceNumber: sequenceNumber || findPlanet.sequenceNumber,
+    satelittes: satelittes || findPlanet.satelittes,
+    star: star || findPlanet.star,
+  };
+
+  const planet = await Planet.findByIdAndUpdate(req.params.id, updatePlanet, {
+    new: true,
+  });
+
+  // If user want update also star
+  if (star) {
+    const findStar = await Star.findById(star);
+
+    // Update planet star
+    await Star.findOneAndUpdate(
+      { _id: star },
+      { $push: { planets: planet._id } },
+      { new: true, upsert: true }
+    );
+
+    // else star not founded
+    if (!findStar) {
+      return next(new ErrorResponse("Star not found", 400));
+    }
+  }
+
+  res.status(201).json({
+    success: true,
+    data: planet,
+  });
+});
+
+// @desc        Delete planet by id
+// @route       DELETE /api/v1/auth/planets/:id
+// @access      Private/Admin
+exports.deletePlanet = AsyncHandler(async (req, res, next) => {
+  await Planet.findByIdAndDelete(req.params.id);
+
+  res.status(201).json({
+    success: true,
+    message: "Deleted successfully",
+  });
 });
