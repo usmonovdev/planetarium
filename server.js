@@ -4,6 +4,7 @@ const connectDB = require("./config/db");
 const morgan = require("morgan");
 const colors = require("colors");
 const path = require("path")
+const cors = require("cors")
 const errorHandler = require("./middleware/error");
 
 // Initialize dotenv
@@ -18,6 +19,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+app.use(cors())
 
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));

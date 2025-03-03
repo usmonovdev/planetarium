@@ -6,10 +6,23 @@ const ErrorResponse = require("../utils/errorResponse");
 // @route       GET /api/v1/auth/stars
 // @access      Public
 exports.getAllStars = AsyncHandler(async (req, res, next) => {
-  const stars = await Star.find();
+  const defaultPageLimit = process.env.DEFAULT_PAGE_LIMIT || 5;
+  const limit = parseInt(req.query.limit || defaultPageLimit);
+  const page = parseInt(req.query.page || 1);
+  const total = await Star.countDocuments();
+
+  const stars = await Star.find()
+    .skip(page * limit - limit)
+    .limit(limit);
 
   res.status(200).json({
     success: true,
+    pagination: {
+      totalPages: Math.ceil(total / limit),
+      currentPage: page,
+      nextPage: Math.ceil(total / limit) < page + 1 ? null : page + 1,
+      limit,
+    },
     data: stars,
   });
 });
