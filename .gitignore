@@ -1,3 +1,4 @@
 node_modules/
 .env
 dataExamples.json
+public/uploads/
