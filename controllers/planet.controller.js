@@ -75,7 +75,7 @@ exports.createPlanet = AsyncHandler(async (req, res, next) => {
 });
 
 // @desc        Update planet
-// @route       POST /api/v1/auth/planets/:id
+// @route       PUT /api/v1/auth/planets/:id
 // @access      Private/Admin
 exports.updatePlanet = AsyncHandler(async (req, res, next) => {
   // Get request data

@@ -56,3 +56,42 @@ exports.login = AsyncHandler(async (req, res, next) => {
     token,
   });
 });
+
+// @desc        Get my profile
+// @route       GET /api/v1/auth/profile
+// @access      Private
+exports.getProfile = AsyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user._id);
+
+  res.status(200).json({
+    success: true,
+    data: user,
+  });
+});
+
+// @desc        Update my profile
+// @route       PUT /api/v1/auth/profile/update
+// @access      Private
+exports.updateProfile = AsyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user._id);
+  const { name, email } = req.body;
+
+  const fieldsToUpdate = {
+    name: name || user.name,
+    email: email || user.email,
+  };
+
+  const userUpdated = await User.findByIdAndUpdate(
+    req.user._id,
+    fieldsToUpdate,
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  res.status(200).json({
+    success: true,
+    data: userUpdated,
+  });
+});
